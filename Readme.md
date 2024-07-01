@@ -1,6 +1,6 @@
 ## Hi, I am [Muyi Bao](https://github.com/BaoBao0926/BaoBao0926.github.io)
 
-[English]() | [简体中文]()
+[English](https://github.com/BaoBao0926/Paper_reading) | [简体中文]()
 
 ---
 
