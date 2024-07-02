@@ -47,6 +47,7 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 贡献：
 
 - 整体架构使用的是U-Net的架构
+- 第一层是Stem Convolutional Network, kernal size of 7 * 7 * 7, padding of 3 * 3 * 3 and stride of 2 * 2 * 2。在文章第一段提到，有一些工作为了提取large range information form 高分辨率3D图像，在一开始就会使用特别大的卷积核来促进感受野
 - Mamba block改成了TSMamba Block，如图Fig.2里面的样子，里面涉及了一些模块
     - input x is [C,D,H,W]
     - x = GSC(x) = x + Conv3d_333(Conv3d_333(x) * Conv3d_111(X)), 每一个卷积都代表着 Norm->Conv3D->Nonlinear
@@ -55,7 +56,7 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
     - x = x + MLP(LayerNorm(x))
   
 
-<img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/SegMamba.png" alt="Model" style="width: 600px; height: auto;"/>
+<img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/SegMamba.png" alt="Model" style="width: 800px; height: auto;"/>
 
 使用的数据集：
 
