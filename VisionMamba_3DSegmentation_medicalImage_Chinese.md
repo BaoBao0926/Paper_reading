@@ -52,8 +52,10 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 - Mamba block改成了TSMamba Block，如图Fig.2里面的样子，里面涉及了一些模块
     - input x is [C,D,H,W]
     - x = GSC(x) = x + Conv3d_333(Conv3d_333(x) * Conv3d_111(X)), 每一个卷积都代表着 Norm->Conv3D->Nonlinear
+       - 这个GSC，门控空间卷积模块，理论上可以增强在ToM之前空间维度上的特征表示
     - x = x + LayerNorm(ToM(x))
         - ToM(x)为Mamba模块，其中有三个方向，如Fig.3b所示，forward，reverse和inter-wise，这个inter-wise代表的是竖着的
+        - ToM(x) = Mamba(x_forward) + Mamba(x_reverse) + Mamba(z_inter-slice)
     - x = x + MLP(LayerNorm(x))
 - decoder是CNN-based的
   
