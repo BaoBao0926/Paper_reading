@@ -2,6 +2,10 @@
 
 Here, I will put some paper about Vision Mamba used in medical image segmentation, more focusing on 3D segmentation.
 
+好多文章都会提到：
+- CNN-based方法对于局部和全局的感受野会受限
+- Transformer有了全局视野，但是需要heavy computational load，在面对高维高分辨率的图像的时候
+
 <details>        <!-------------------------------------------------------------------   1.1.2.1  U-Mamba   ---------------------------------------------------------------------------->
    <summary>
    <b style="font-size: larger;">1.1.2.1 U-Mamba </b>         
