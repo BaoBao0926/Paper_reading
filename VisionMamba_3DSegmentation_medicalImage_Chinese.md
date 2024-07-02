@@ -6,6 +6,8 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 - CNN-based方法对于局部和全局的感受野会受限
 - Transformer有了全局视野，但是需要heavy computational load，在面对高维高分辨率的图像的时候
 
+---
+
 <details>        <!-------------------------------------------------------------------   1.1.2.1  U-Mamba   ---------------------------------------------------------------------------->
    <summary>
    <b style="font-size: larger;">1.1.2.1 U-Mamba </b>         
@@ -79,40 +81,58 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 </details>
 
 
-<details>    <!---------------------------------------------------------------------------------    1.1.2.2 SegMamba  --------------------------------------------------------- -->
+<details>    <!---------------------------------------------------------------------------------    1.1.2.3 nnMamba  --------------------------------------------------------- -->
    <summary>
-   <b style="font-size: larger;">1.1.2.2 SegMamba </b>       
+   <b style="font-size: larger;">1.1.2.3 nnMamba </b>       
    </summary>   
     
-   The Paper: [SegMamba: Long-range Sequential Modeling Mamba For 3D Medical Image Segmentation](https://arxiv.org/pdf/2401.13560)
+   The Paper: [nnMamba: 3D Biomedical Image Segmentation, Classification and Landmark Detection with State Space Model](https://arxiv.org/pdf/2402.03526)
 
 贡献：
 
+- 这篇文章其实也算是一个通用骨架了，但是没有非常通用，对面classification和dense prediction的时候会有对应的修改
 - 整体架构使用的是U-Net的架构
-- Mamba block改成了TSMamba Block，如图Fig.2里面的样子，里面涉及了一些模块
-    - input x is [C,D,H,W]
-    - x = GSC(x) = x + Conv3d_333(Conv3d_333(x) * Conv3d_111(X)), 每一个卷积都代表着 Norm->Conv3D->Nonlinear
-    - x = x + LayerNorm(ToM(x))
-        - ToM(x)为Mamba模块，其中有三个方向，如Fig.3b所示，forward，reverse和inter-wise，这个inter-wise代表的是竖着的
-    - x = x + MLP(LayerNorm(x))
+- Segmentation and Landmark Detection架构
+   - StemConv->ResMamba->ResMamba->ResMamba->Double Conv->Double Conv->Double Conv
+      - StemConv应该是大卷积核
+      - Res-Mamba是 x = x + Relu(BN(Conv3 * 3 * 3(Relu(BN(Conv3 * 3 * 3(x)))))) + miccai(x)
+      - miccai是这篇文章提出来的一个模块，实际上分为两个部分，MIC和CAI
+         - MIC，Mamba in Convolution，这个模块通过Network-In-Network而启发的
+            - 让ConvMIC(x) = Relu(BN(Conv1 * 1 * 1(x)))
+            - x = ConvMIC(ConvMIC(x) + CAI(ConvMIC(x)))
+         - CAI, Channel and Spatial with Siamese Input, 这个是被用于MIC里面的一个模块
+            - 如图Fig.2e所示，就是一个四通道的SSM，有flip channel，flip length，flip channel&length和original
+- Classification的架构：
+   - 整体如Fig.2b所示，应该是每一个ResBlock的输出一起经过一个Average pooling, 然后得到的经过一个MICCAI，一个MLP，通过MLP进行预测 
+
   
 
-<img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/SegMamba.png" alt="Model" style="width: 600px; height: auto;"/>
-
-使用的数据集：
-
-    - CRC-500: 文章提的
-    
-    - BraTS2023 Dataset
-
-    - AIIB2023 Dataset
+<img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/nnMamba.png" alt="Model" style="width: 800px; height: auto;"/>
 
    <br />
 
 </details>
 
 
+<details>    <!---------------------------------------------------------------------------------    1.1.2.4 VM-UNet  --------------------------------------------------------- -->
+   <summary>
+   <b style="font-size: larger;">1.1.2.4 VM-UNet </b>       
+   </summary>   
+    
+   The Paper: [VM-Unet: Vision Mamba UNet for Medical Image Segmentation](https://arxiv.org/pdf/2402.03526)
 
+贡献：
+
+- 整体架构使用的是U-Net的架构,并且这是第一篇只采用的是纯SSM的结构，也就是decoder里面没有任何的卷积层
+- 这篇文章叫自己Vision Mamba，但实际上使用的是VMamba厘米那的模块VSS block，进行了一定的修改，如Fig.1
+   - SSM采用的是VMamba里面的四个扫描方向，forward，reverse和竖着的forward和reverse
+- 似乎对着Loss function进行了一定的探究在section3.3，但是好像不是很关键
+
+<img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/VM-Unet.png" alt="Model" style="width: 800px; height: auto;"/>
+
+   <br />
+
+</details>
 
 
 
