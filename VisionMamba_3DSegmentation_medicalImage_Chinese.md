@@ -19,6 +19,7 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
     - x = SiLU(linear(x)) * SSM(SiLU(1D Conv(Linear(x))))    [B,L,C]
     - x = Linear(x)    [B,L,C]
     - x = Reshape(x)    [B,C,H,W,D]
+- decodder是CNN-based的
   
 
 <img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/U-Mamba.png" alt="Model" style="width: 600px; height: auto;"/>
@@ -54,6 +55,7 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
     - x = x + LayerNorm(ToM(x))
         - ToM(x)为Mamba模块，其中有三个方向，如Fig.3b所示，forward，reverse和inter-wise，这个inter-wise代表的是竖着的
     - x = x + MLP(LayerNorm(x))
+- decoder是CNN-based的
   
 
 <img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/SegMamba.png" alt="Model" style="width: 800px; height: auto;"/>
