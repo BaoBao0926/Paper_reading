@@ -139,7 +139,46 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 
 
 
+<details>     <!---------------------------------------------------   1.1.2.5 Swin-UMamba   ---------------------------------------------------------------------->
+   <summary>
+   <b style="font-size: larger;">1.1.2.5 Swin-UMamba 2024/7/4 </b>         
+   </summary>   
+    
+   The Paper, published in 2024.2.5: [Swin-UMamba: Mamba-based UNet with ImageNet-based pretraining](https://arxiv.org/pdf/2402.03302)
 
+贡献：
+
+- 整体架构使用的是U-Net的架构，想要模仿Swim-Transformer的做法(但是这里存在一些问题，我在下面提到了)
+- encoder部分使用的是VMamba的VSS block，decoder使用了mamba-based和CNN-based两者
+   - mamba-based decoder的计算量和参数量要明显少于CNN-based decoder。在面对AbdomenMRI数据集的时候:
+      - parameter数量从CNN的60M降到了28M
+      - FLOPs从69G降到了18.9G
+   - 性能表现依赖于数据集
+      - AbdomeMRT数据集，mamba-based decoder会更好
+      - Endoscopy数据集和Microscopy数据集，CNN-based decoder会更好， 
+- 使用了deep supervision的策略，[paper: Deeply-Supervised Nets](https://proceedings.mlr.press/v38/lee15a.pdf) 和可参考的[CSDN blog](https://blog.csdn.net/qq_40507857/article/details/121025445?ops_request_misc=&request_id=&biz_id=102&utm_term=deep-supervised%20net&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-0-121025445.142^v100^pc_search_result_base4&spm=1018.2226.3001.4187)。其实也就是在decoder的一些(该文章是3个)隐藏层中进行最终任务的分割，造成一些损失，从而加速训练
+- 这篇文章称自己为第一篇探究了mamba-based model的关于预训练的性能提升。似乎是在之前的一些文章(CNN-based和Transformer-based)使用大分类数据集进行与训练可以提升性能，但是mamba-based model大多数还是从头开始训练(我猜也有训练变快了的原因),所以这篇文章探究了现在ImageNet上进行预训练，然后在进行分割任务。
+   - ImageNet-based pretraining可以提升很多的性能，比如面对AbdomenMRI Dataset的时候，可以提升7%的性能
+
+对于Swin这个点，我有一些想法。这篇文章其实想要模仿的是Swim-Transformer的结构，包括VM-UNet其实也有一点想要模仿的意思。但是对于Swin而言，我认为最重要的有两点：
+
+- 第一点是Swin的w window，也就是我们要在一个widow里面进行自注意力，如果要用到mamba里面，那我们应该要对一个widow里面的patch进行ssm操作才对。才更加符合window这个概念，但是按照Swin-Transformer里面的参数，一个window有7 * 7个patch，49个patch对于Mamba来说可能有一点太短了(有可能，我也不确定，毕竟mamba号称可以处理百万序列）
+- 第二个点是Swin的s shift，也就是为了量window之间有信息交互，所以要进行shift，那么这篇文章也就没有对这个进行处理
+- 所以事实上，这篇文章只是模仿了Swin-Transoformer的patch merging而已，我认为没有使用到Swin里面的最核心的观念S和W。
+
+<img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/Swin-UMamba.png" alt="Model" style="width: 600px; height: auto;"/>
+
+使用的数据集：
+
+    - AdbomenMRI, MICCAI 2022 AMOS Challenge
+    
+    - Endoscopy, MICCAI 2017 EndoVis Challenge
+    
+    - Microscopy, NuerIPS 2022 Cell Segmentation Challenge
+
+   <br />
+
+</details>
 
 
 
