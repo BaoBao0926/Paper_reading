@@ -12,7 +12,7 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 
 <details>        <!-------------------------------------------------------------------   1.1.2.1  U-Mamba   ---------------------------------------------------------------------------->
    <summary>
-   <b style="font-size: larger;">1.1.2.1 U-Mamba </b>         
+   <b style="font-size: larger;">1.1.2.1 U-Mamba 2024/6/30 </b>         
    </summary>   
     
    The Paper: [U-Mamba: Enhancing Long-range Dependency for Biomedical Image Segmentation](https://arxiv.org/pdf/2401.04722)
@@ -48,7 +48,7 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 
 <details>    <!---------------------------------------------------------------------------------    1.1.2.2 SegMamba  --------------------------------------------------------- -->
    <summary>
-   <b style="font-size: larger;">1.1.2.2 SegMamba </b>       
+   <b style="font-size: larger;">1.1.2.2 SegMamba 2024/6/30 </b>       
    </summary>   
     
    The Paper: [SegMamba: Long-range Sequential Modeling Mamba For 3D Medical Image Segmentation](https://arxiv.org/pdf/2401.13560)
@@ -85,7 +85,7 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 
 <details>    <!---------------------------------------------------------------------------------    1.1.2.3 nnMamba  --------------------------------------------------------- -->
    <summary>
-   <b style="font-size: larger;">1.1.2.3 nnMamba </b>       
+   <b style="font-size: larger;">1.1.2.3 nnMamba 2024/7/1 </b>       
    </summary>   
     
    The Paper: [nnMamba: 3D Biomedical Image Segmentation, Classification and Landmark Detection with State Space Model](https://arxiv.org/pdf/2402.03526)
@@ -118,7 +118,7 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 
 <details>    <!---------------------------------------------------------------------------------    1.1.2.4 VM-UNet  --------------------------------------------------------- -->
    <summary>
-   <b style="font-size: larger;">1.1.2.4 VM-UNet </b>       
+   <b style="font-size: larger;">1.1.2.4 VM-UNet 20244/7/1 </b>       
    </summary>   
     
    The Paper: [VM-Unet: Vision Mamba UNet for Medical Image Segmentation](https://arxiv.org/pdf/2402.03526)
@@ -181,6 +181,32 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 </details>
 
 
+<details>     <!---------------------------------------------------   1.1.2.6 Mamba-UNet   ---------------------------------------------------------------------->
+   <summary>
+   <b style="font-size: larger;">1.1.2.6 Mamba-UNet 2024/7/4 </b>         
+   </summary>   
+    
+   The Paper, published in 2024.2.7: [Mamba-UNet: UNet-Like Pure Visual Mamba for Medical Image Segmentation](https://arxiv.org/pdf/2402.05079)
+
+贡献：
+
+- 整体架构使用的是U-Net的架构,下采样用的patch merging，纯Mamba block，没有用到卷积
+- encoder和decoder都使用的是VMamba的VSS block
+- 和前面文章比起来，这篇工作没有太多创新，就是把VMamba拿过来直接用，前面的文章好歹还会改一点mamba block之列的
+  
+
+<img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/Mamba-UNet.png" alt="Model" style="width: 600px; height: auto;"/>
+
+使用的数据集：
+
+    - ACDC MRI cardica segmentation dataset, Automated Cardiac Diagnosis Challenge
+    
+    - Synpse multi-organ segmentation Challenge, MICCAI 2015 Multi-Atlas Abdomen Labeling Challenge
+    
+
+   <br />
+
+</details>
 
 
 
