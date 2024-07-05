@@ -188,6 +188,8 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
     
    The Paper, published in 2024.2.7: [Mamba-UNet: UNet-Like Pure Visual Mamba for Medical Image Segmentation](https://arxiv.org/pdf/2402.05079)
 
+没有什么创新，没有太多价值
+
 贡献：
 
 - 整体架构使用的是U-Net的架构,下采样用的patch merging，纯Mamba block，没有用到卷积
