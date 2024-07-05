@@ -210,7 +210,42 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 
 
 
+<details>     <!---------------------------------------------------   1.1.2.7 LightM-UNet   ---------------------------------------------------------------------->
+   <summary>
+   <b style="font-size: larger;">1.1.2.7 LightM-UNet 2024/7/5 </b>         
+   </summary>   
+    
+   The Paper, published in 2024.3.8: [LightM-UNet: Mamba Assists in Lightweight UNet for Medical Image Segmentation](https://arxiv.org/pdf/2403.05246)
 
+贡献：
+
+- 这篇文章相当于第一篇进行Mamba-based分割任务的参数优化的文章，压缩的相当狠，从U-Mamba的173M压缩到了1.87M，并且性能还有一点提升
+- 整体架构使用的是U-Net的架构,下采样用的Max Pooling，纯Mamba block(有一点 点积DWConv)，为了节约参数，decoder部分没有正儿八经的模块，只用了一个点积而已
+  - Encoder部分：DWConv->Encoder Block->Encoder Block->Encoder Block->Bottleneck Block
+     - Encoder Block: 对于第l个encoder，先经过l个RVM Layer，最后一个RVM Layer会增加channel数量，然后经过一个max-pooling，降低resolution
+     - RVM Layer(x) = Projection(LayerNorm(Scale*x + VSS(LayerNorm(x))))
+     - VSS为Vision Mamb的block，forward和backword的那个
+  - Decoder部分，很多个Decoder Block堆叠，每一个Block都是固定的
+     - Decoder(x) = Interpolation(relu(Scale*x + DWConv(x))), Interpolation为bilinear interpolation， x为上一层的输出和残差连接的输出之和
+
+想法：
+
+考虑到前面的Swin-UMamba里面提到的，使用Mamba作为decoder可以减少大量的参数而言，如果直接把decoder的复杂卷积全部抛弃，事实上确实有希望让参数变的非常少非常少，并且把下采样换成了maxpooling，感觉有点奇怪，但是好像也可以说的过去。但是让我很惊讶的是，性能还有有一定的提升，这是和U-Mamba比较的。
+
+使用的数据集：
+
+    - LiTs dataset， 3D CT image
+    
+    - Montogomery&Shenzhen dataset, 2D X-ray images
+
+<img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/LightM-UNet.png" alt="Model" style="width: 600px; height: auto;"/>
+
+
+    
+
+   <br />
+
+</details>
 
 
 
