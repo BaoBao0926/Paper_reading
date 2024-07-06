@@ -251,6 +251,41 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 
 
 
+<details>     <!---------------------------------------------------   1.1.2.8 LKM-UNet   ---------------------------------------------------------------------->
+   <summary>
+   <b style="font-size: larger;">1.1.2.8 LKM-UNet 2024/7/6 </b>         
+   </summary>   
+    
+   The Paper, published in 2024.3.12: [Large Window-based Mamba UNet for Medical Image Segmentation: Beyond Convolution and Self-attention](https://arxiv.org/pdf/2403.07332)
+
+   The official repository: [here](https://github.com/wjh892521292/LKM-UNet)
+
+贡献：
+
+- 这篇文章对于mamba的输入而言做了修改，第一个(PiM)是在一个winodw里面的所有像素的ssm，第二个(PaM)是对着这个widow进行pooling，然后对着pooling之后的所有window进行ssm。前者实现local scope pixel之间的信息交互，避免遗忘了邻近区域内部的信息，后者实现long-range dependency modeling and global patch interaction
+- 整体架构使用的是U-Net的架构,下采样用的没说，decoder为卷积，使用的是Vim里面的双向
+  - Encoder部分：先一个Depth-wise Conv,然后就是四层LM Block(由一个PiM和一个PaM组成)
+     - PiM为pixel-level SSM: 把input image划分为window，在一个window内部，对着所有的像素进行mamba操作
+        - 从文章的消融实验来看，如果这个window的size变大，性能反而提升
+     - PaM为patch-level SSM：把经过PiM的输出进行一次pooling(没有说什么pooling)，然后一个window就相当于一个token了，对着所有的window进行mamba操作，最后来一个Unpooling
+     - PiM的输出和PaM的输出通过残差相加
+  - Decoder部分，就是卷积的输出，类似于ViT那种的，也没有详细介绍
+
+
+使用的数据集：
+
+    - Adbomen CT, MICCAI 2022 FLARE Challenge
+    
+    - Adbomen MR, MICCAI 2022 AMOS Challenge
+    
+<img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/LKM-UNet.png" alt="Model" style="width: 600px; height: auto;"/>
+
+
+    
+
+   <br />
+
+</details>
 
 
 
