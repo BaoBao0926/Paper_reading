@@ -389,3 +389,55 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 
 </details>
 
+
+
+
+
+<details>     <!---------------------------------------------------   1.1.2.12 UltraLight VM-UNet   ---------------------------------------------------------------------->
+   <summary>
+   <b style="font-size: larger;">1.1.2.12 UltraLight VM-UNet 2024/7/6 </b>         
+   </summary>   
+    
+   The Paper, published in 2024.3.29: [UltraLight VM-UNet:Parallel Vision Mamba Significantly Reduces Parameters for Skin Lesion Segmentation](https://arxiv.org/pdf/2403.20035)
+
+   The official repository: [Here](https://github.com/wurenkai/UltraLight-VM-UNet)
+   
+贡献：
+
+- 这篇文章做的最大贡献是模型轻量化，和前面看过的Light Mamba比起来，少了87%，只有0.049M的参数量和0.06GFLOPs，提出的PVM Layer是一个即插即用的模块，非常棒
+- 整体架构使用的是U-Net的架构, 似乎没有下采样，Encoder用了3层ConV Block，然后三层PVM Layer，Decoder是对称的也是三层卷积，三层PVM Layer，中间的skip connection和前面看过的H-VMamba一样，使用的是SAB和CAB(spatical attention bridge和chanel attention bridge)
+  - Encoder部分：一共六层，前3层为卷积层，kernel size为没有提，后3层为PVM Layer
+  - 连接的部分，与H-VMamba一样子的，由共享参数的SAB和CAB组成
+     - SAB(x) = x + x * Conv2d(k=7)([MaxPool(x); AvgPool(x)])
+     - CAB(x) = x + x * Sigmoid(FC(GAP(x)))
+  - Decoder部分: 与Encoder对称，由3层卷积和3层PVM Layer
+- PVM Layer构成
+   - 最核心想法如Fig.3所示，我们把channel划分成四份，对着每一份进行一个mamba的操作，这样可以节约非常多的参数，最后在拼到一起
+   - 有一个Fig.4，我没有放到这里来，如果对着C channel数量的直接进行mamba，需要x个parameter，那么对着C/2进行两次mamba，只需要2*0.251(两个C/2是分开的mamba)，对着4 * C/4只需要0.063 * 4个参数。
+   - 整体看起来非常简单，并且参数非常少，而且效果还不错，虽然不都是最好的，ISIC2017 DSC SE是最好的，PH^2全都是最好的，ISIC2018在DSC和ACC上是最好的
+  
+使用的数据集：
+
+    - ISIC2017
+    - ISIC2018
+    - PH^2，这是个什么external validation，不太理解什么意思
+
+
+<img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/UltraLight%20VM-UNet.png" alt="Model" style="width: 1100px; height: auto;"/>
+
+
+   <br />
+
+</details>
+
+
+
+
+
+
+
+
+
+
+
+
