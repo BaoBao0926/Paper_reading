@@ -330,7 +330,7 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
    <b style="font-size: larger;">1.1.2.10 H-VMUNet 2024/7/6 </b>         
    </summary>   
     
-   The Paper, published in 2024.3.12: [H-vmunet: High-order Vision Mamba UNet for Medical Image Segmentation](https://arxiv.org/pdf/2403.13642)
+   The Paper, published in 2024.3.20: [H-vmunet: High-order Vision Mamba UNet for Medical Image Segmentation](https://arxiv.org/pdf/2403.13642)
 
    The official repository: [here](https://github.com/wurenkai/H-vmunet)
    
@@ -366,5 +366,26 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 
 </details>
 
+<details>     <!---------------------------------------------------   1.1.2.11 Mamba-HUNet   ---------------------------------------------------------------------->
+   <summary>
+   <b style="font-size: larger;">1.1.2.11 Mamba-HUNet 2024/7/6 </b>         
+   </summary>   
+    
+   The Paper, published in 2024.3.26: [Integrating Mamba Sequence Model and Hierarchical Upsampling Network for Accurate Semantic Segmentation of Multiple Sclerosis Legion](https://arxiv.org/pdf/2403.17432)
 
+   The official repository: None
+   
+贡献：
+
+- 看完前面的文章，这篇文章其实没有什么创新点，如果可以早三个月发，那还有点新意
+- 唯一一个，而且也不是很重要的是，他们做了一个轻量级的模型，和一个网站，可以快速识别
+- 纯Mamba结构，没有说下采样用的什么，有Patch embedding, 这也是Mamba-HUNet里面的H 代表hierarchy，也就是有层次的原因。
+  
+
+<img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/Mamba-HUNet.png" alt="Model" style="width: 1100px; height: auto;"/>
+
+
+   <br />
+
+</details>
 
