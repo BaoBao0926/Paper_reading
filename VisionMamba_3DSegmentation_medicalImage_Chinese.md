@@ -125,7 +125,7 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 
 贡献：
 
-- 整体架构使用的是U-Net的架构,并且这是第一篇只采用的是纯SSM的结构，也就是decoder里面没有任何的卷积层
+- 整体架构使用的是U-Net的架构,并且这是第一篇只采用的是纯SSM的结构，也就是decoder里面没有任何的卷积层，patch embeding用的4 * 4的patch size
 - 这篇文章叫自己Vision Mamba，但实际上使用的是VMamba厘米那的模块VSS block，进行了一定的修改，如Fig.1
    - SSM采用的是VMamba里面的四个扫描方向，forward，reverse和竖着的forward和reverse
 - 似乎对着Loss function进行了一定的探究在section3.3，但是好像不是很关键
