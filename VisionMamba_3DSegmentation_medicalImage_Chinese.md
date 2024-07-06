@@ -35,11 +35,8 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 使用的数据集：
 
     - MICCAI 2022 FLARE Challenge
-    
     - MICCAI 2022 AMOS Challenge
-    
     - MICCAI 2017 EndoVis Challenge
-    
     - NuerIPS 2022 Cell Segmentation Challenge
 
    <br />
@@ -72,10 +69,8 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 
 使用的数据集：
 
-    - CRC-500: 文章提的
-    
+    - CRC-500: 文章自己提出的
     - BraTS2023 Dataset
-
     - AIIB2023 Dataset
 
    <br />
@@ -171,9 +166,7 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 使用的数据集：
 
     - AdbomenMRI, MICCAI 2022 AMOS Challenge
-    
     - Endoscopy, MICCAI 2017 EndoVis Challenge
-    
     - Microscopy, NuerIPS 2022 Cell Segmentation Challenge
 
    <br />
@@ -237,7 +230,6 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 使用的数据集：
 
     - LiTs dataset， 3D CT image
-    
     - Montogomery&Shenzhen dataset, 2D X-ray images
 
 <img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/LightM-UNet.png" alt="Model" style="width: 600px; height: auto;"/>
@@ -275,7 +267,6 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 使用的数据集：
 
     - Adbomen CT, MICCAI 2022 FLARE Challenge
-    
     - Adbomen MR, MICCAI 2022 AMOS Challenge
     
 <img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/LKM-UNet.png" alt="Model" style="width: 600px; height: auto;"/>
@@ -333,6 +324,47 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 </details>
 
 
+
+<details>     <!---------------------------------------------------   1.1.2.10 H-VMUNet   ---------------------------------------------------------------------->
+   <summary>
+   <b style="font-size: larger;">1.1.2.10 H-VMUNet 2024/7/6 </b>         
+   </summary>   
+    
+   The Paper, published in 2024.3.12: [H-vmunet: High-order Vision Mamba UNet for Medical Image Segmentation](https://arxiv.org/pdf/2403.13642)
+
+   The official repository: [here](https://github.com/wurenkai/H-vmunet)
+   
+
+贡献：
+
+- 这篇文章对于整个Mamba Block进行了修改(不是SSM)，是参考这篇工作【HorNet: Efficient High-Order Spatial Interactions with Recursive Gated Convolutions】修改的。其次对于skip connection part也进行了修改。
+- [【CSDN Blog for HorNet: Efficient High-Order Spatial Interactions with Recursive Gated Convolutions】](https://blog.csdn.net/gaopursuit/article/details/126711612?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522172025984816800225580120%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=172025984816800225580120&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-126711612-null-null.142^v100^pc_search_result_base4&utm_term=Efficient%20high-order%20spatial%20interactions%20with%20recursive%20gated%20convolutions&spm=1018.2226.3001.4187):  大概意思就是，这篇文章的作者认为Transformer取得成功的主要原因是因为dot-product self-attention可以实现高境界特征交互(high-order spatial interatction)，与Fig.3c类似，作者通过门控和循环实现了基于卷积的高阶空间交互建模。
+- 整体架构使用的是U-Net的架构,下采样用的卷积，encoder用了两个卷积层和四个H-VSS block，decoder也是H-VSS Block和两个卷积，SSM没有改动，使用的是VMamba里面的四方向，中间的skip connection part也进行了一些修改
+  - Encoder部分：一共六层，前两层为卷积层，kernel size为3，后四层为H-VSS block层，并紧跟一个卷积层(我认为是用于下采样)
+  - 连接的部分，与VM-UNet-v2类似，其实也是SAB spatial attention bridge和cab channel attention module，也就是注意力机制，这里图里面显示shared表示参数共享，是因为SAB里面由卷积 CAB里面由FC，这些参数是共享的
+     - SAB(x) = x + x * Conv2d(k=7)([MaxPool(x); AvgPool(x)])
+     - CAB(x) = x + x * Sigmoid(FC(GAP(x)))
+  - Decoder部分: 与Encoder对称，由两层卷积和四层H-VSS Block层
+- H-VSS Block构成
+   - 首先，mamba用的是VMamba的四方向，架构用的是HorNet里面的架构，里面的Mul是Hadamard product operation
+   - 主要想法就是，在一个block中，重复的不断进行N次ssm(N即为n-order的n),并且维度从小的不断变大，从而实现高层次到低层次的计算
+   - 如Fig.3b的H3-SS2D所示，先通过一个映射层把维度扩展到2C，然后第一个用C/4，第二个用C/2，第三个用C维度，这样进行的
+      - 有点不清楚的是，每一次维度的扩展只可能发生在SS2D里面，所以只有可能是Fig.1a里面的SSM里面的MLP进行扩维度
+   - H-SS2D里面用到的Local-SS2D是一个卷积和ssm的结合，会维持维度不变
+
+使用的数据集：
+
+    - ISIC17, international skin imaging collaboration
+    - Spleen dataset, sourced from Memorial Sloan Kettering Cancer Cente
+    - Polyp dataset, MICCAI 2015 automated polyp detection subtask
+    
+    
+<img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/H-VMUnet.png" alt="Model" style="width: 1100px; height: auto;"/>
+
+
+   <br />
+
+</details>
 
 
 
