@@ -299,11 +299,12 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
    The Paper, published in 2024.3.12: [VM-UNET-V2: Rethinking Vision Mamba UNet for Medical Image Segmentation](https://arxiv.org/pdf/2403.09157)
 
    The official repository: [here](https://github.com/nobodyplayer1/VM-UNetV2)
+   
 
 贡献：
 
 - 这篇文章对于Encoder和Decoder之间的skip connection做了修改
-- 这篇文章应该是参考的了这篇文章 【U-net v2:Rethinking the skip connections of u-net for medical image segmentation】，因为名字都差不多，而且文中提到了这篇文章，结构也差不多。从这篇文章参考资料, 里面用到了这篇文章【Cbam:Convolutional block attention module】的内容
+- 这篇文章应该是参考的了这篇文章 【U-net v2:Rethinking the skip connections of u-net for medical image segmentation】，因为名字都差不多，而且文中提到了这篇文章，结构也差不多。从这篇文章参考资料, 里面用到了这篇文章【Cbam:Convolutional block attention module】的内容，不是VM-UNet-v1的作者写的。
    - [UNet-v2 CSDN Blog](https://blog.csdn.net/qq_29788741/article/details/134796090?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522172024792516800182168790%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=172024792516800182168790&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-134796090-null-null.142^v100^pc_search_result_base4&utm_term=Unet-v2&spm=1018.2226.3001.4187): 从Unet-v2来看，就是对于skip connection进行了一些处理,使用到了CBAM里面的attention module(不是transformer的自注意力机制)，让每一个stage输出的特征图进行进行注意计算，然后使用dowsample让特征图大小一样，最后使用Hadamard product(这个就是矩阵中对应位置的元素相乘,参考[CSDN Blog](https://blog.csdn.net/qq_42363032/article/details/122538639?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522172024489316800227419590%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=172024489316800227419590&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_click~default-1-122538639-null-null.142^v100^pc_search_result_base4&utm_term=Hadamard%20product&spm=1018.2226.3001.4187))，把所有处理之后的特征图相乘。
    - [CBAM CSDN Blog](https://blog.csdn.net/m0_45447650/article/details/123983483?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522172024715916800184118767%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=172024715916800184118767&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-123983483-null-null.142^v100^pc_search_result_base4&utm_term=Cbam&spm=1018.2226.3001.4187): 就是结合了通道和空间注意力机制模块
       - CAM channel attention module，通道维度不变，压缩空间维度，也就是C * H * W -> C * 1 * 1, 这代表了对于每一个channel的注意力。CAM(x) = activation(MLP(AvgPool(x)) + MLP(MaxPool(x)))
