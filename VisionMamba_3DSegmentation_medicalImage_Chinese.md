@@ -281,8 +281,6 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 <img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/LKM-UNet.png" alt="Model" style="width: 600px; height: auto;"/>
 
 
-    
-
    <br />
 
 </details>
@@ -293,8 +291,45 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 
 
 
+<details>     <!---------------------------------------------------   1.1.2.9 VM-UNet-V2   ---------------------------------------------------------------------->
+   <summary>
+   <b style="font-size: larger;">1.1.2.9 VM-UNet-V2 2024/7/6 </b>         
+   </summary>   
+    
+   The Paper, published in 2024.3.12: [VM-UNET-V2: Rethinking Vision Mamba UNet for Medical Image Segmentation](https://arxiv.org/pdf/2403.09157)
+
+   The official repository: [here](https://github.com/nobodyplayer1/VM-UNetV2)
+
+贡献：
+
+- 这篇文章对于Encoder和Decoder之间的skip connection做了修改
+- 这篇文章应该是参考的了这篇文章 【U-net v2:Rethinking the skip connections of u-net for medical image segmentation】，因为名字都差不多，而且文中提到了这篇文章，结构也差不多。从这篇文章参考资料, 里面用到了这篇文章【Cbam:Convolutional block attention module】的内容
+   - [UNet-v2 CSDN Blog](https://blog.csdn.net/qq_29788741/article/details/134796090?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522172024792516800182168790%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=172024792516800182168790&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-134796090-null-null.142^v100^pc_search_result_base4&utm_term=Unet-v2&spm=1018.2226.3001.4187): 从Unet-v2来看，就是对于skip connection进行了一些处理,使用到了CBAM里面的attention module(不是transformer的自注意力机制)，让每一个stage输出的特征图进行进行注意计算，然后使用dowsample让特征图大小一样，最后使用Hadamard product(这个就是矩阵中对应位置的元素相乘,参考[CSDN Blog](https://blog.csdn.net/qq_42363032/article/details/122538639?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522172024489316800227419590%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=172024489316800227419590&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_click~default-1-122538639-null-null.142^v100^pc_search_result_base4&utm_term=Hadamard%20product&spm=1018.2226.3001.4187))，把所有处理之后的特征图相乘。
+   - [CBAM CSDN Blog](https://blog.csdn.net/m0_45447650/article/details/123983483?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522172024715916800184118767%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=172024715916800184118767&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-123983483-null-null.142^v100^pc_search_result_base4&utm_term=Cbam&spm=1018.2226.3001.4187): 就是结合了通道和空间注意力机制模块
+      - CAM channel attention module，通道维度不变，压缩空间维度，也就是C * H * W -> C * 1 * 1, 这代表了对于每一个channel的注意力。CAM(x) = activation(MLP(AvgPool(x)) + MLP(MaxPool(x)))
+      - SAM spatial attention module, 空间维度不变，压缩通道位数，也就是C * H * W -> 1 * H * W, 这代表了对于目标的位置信息的关注, SAM(x) = activation(f([AvgPool(x); MaxPool(x)]))。
+         - f代表7 * 7的卷积，实验表明7 * 7的比3 * 3的好，
+         - 中间的操作是把avgpool和maxpool的输出拼接到一起
+      - CBAM为CAM和SAM的结合，对于并行还是串行都有实验，结果是先通道再空间会好一点
+- 整体架构使用的是U-Net的架构,下采样用的patch merging，decoder为卷积，使用的是Vim里面的双向
+  - Encoder部分：先一个Depth-wise Conv,然后就是四层LM Block(由一个PiM和一个PaM组成)
+  - 连接的部分，SDI模块，从图来看，先行过CBAM里面的注意力机制的修改，这样feature map的大小是不变的，然后通过下采样，变成最小的那个feature map的大小，然后使用Hadamard prodct得到输出，大小为最小的feature map的大小
+  - Decoder部分，就是卷积的输出也没有详细介绍
+     - 使用了deep surpervision，对于最后两个stage进行
+     - fusion block说的有点模糊不清楚，因为SDI模块看起来输出的每次都是最小的feature map的大小，所以这样每一次的fusion block都是与最小的feature map大小进行的，所以感觉有点奇怪，可能具体要看代码才行。
 
 
+使用的数据集：
+
+    - ISIC17, ISIC18, CVC-300, CVC-ClinkcDB, Kvasir, CVC-ColonDB and ETIS-LaribPolypDB
+    
+    
+<img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/VM-UNet-V2.png" alt="Model" style="width: 1100px; height: auto;"/>
+
+
+   <br />
+
+</details>
 
 
 
