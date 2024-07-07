@@ -518,9 +518,9 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 
 
 
-<details>     <!---------------------------------------------------   1.1.2.14 AC-MambaSeg   ---------------------------------------------------------------------->
+<details>     <!---------------------------------------------------   1.1.2.15 HC-Mamba   ---------------------------------------------------------------------->
    <summary>
-   <b style="font-size: larger;">1.1.2.14 AC-MambaSeg 2024/7/7 </b>         
+   <b style="font-size: larger;">1.1.2.15 HC-Mamba 2024/7/7 </b>         
    </summary>   
     
    The Paper, published in 2024.5.08: [HC-MAMBA: VISION MAMBA WITH HYBRID CONVOLUTIONALTECHNIQUES FOR MEDICAL IMAGE SEGMENTATION](https://arxiv.org/pdf/2405.05007)
