@@ -461,13 +461,65 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 
     - 3D CBCT dataset
 
-
 <img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/T-Mamba.png" alt="Model" style="width: 1100px; height: auto;"/>
 
 
    <br />
 
 </details>
+
+
+
+
+
+<details>     <!---------------------------------------------------   1.1.2.14 AC-MambaSeg   ---------------------------------------------------------------------->
+   <summary>
+   <b style="font-size: larger;">1.1.2.14 AC-MambaSeg 2024/7/7 </b>         
+   </summary>   
+    
+   The Paper, published in 2024.5.09: [AC-MAMBASEG:AN ADAPTIVE CONVOLUTION AND MAMBA-BASED ARCHITECTURE FOR ENHANCED SKIN LESION SEGMENTATION ](https://arxiv.org/pdf/2404.01065)
+
+   The official repository: [Here](https://github.com/vietthanh2710/AC-MambaSeg)
+   
+贡献：
+
+- 这篇文章把CBAM, Attention Gate, Selective Kernel Bottleneck都结合到了一起
+- 整体架构使用的是U-Net的架构, 似乎没有下采样，有5个stage，每一个stage由ResVSS Block组成。skip connection由CBAM组成，Decoder和Encoder一样
+  - Encoder部分：有5个stage，每一个stage由ResVSS Block组成，具体组成看Fig.3
+  - Decoder部分: 有5个stage，每一个stage由ResVSS Block组成，但是decoder和encoder是不一样的，具体组成看Fig.4
+     - skip connection送过来的部分还经过了一个Attention Gate，
+  - Skip Connection部分：使用了CBAM做注意力机制
+  - BottleNeck：使用了Selective Kernel和点积，Selective Kernel可以参考这个[CSDN Blog](https://blog.csdn.net/qq_52302919/article/details/123078832?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522172032469316800178588516%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=172032469316800178588516&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~baidu_landing_v2~default-1-123078832-null-null.142^v100^pc_search_result_base4&utm_term=%20Selective%20Kernels%20Convolution&spm=1018.2226.3001.4187)
+- ResVSS Block：
+   - ResVSS(x) = x * Scale + DWConv(VSS(InstanceNorm+ReLU(x)))
+   - VSS使用的是VMamba里面的四个方向的
+
+
+
+使用的数据集：
+
+    - 3D CBCT dataset
+
+<img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/AC-MambaSeg1.png" alt="Model" style="width: 1100px; height: auto;"/>
+
+<img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/AC-MambaSeg2.png" alt="Model" style="width: 1100px; height: auto;"/>
+
+<img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/AC-MambaSeg3.png" alt="Model" style="width: 500px; height: auto;"/>
+
+   <br />
+
+</details>
+
+
+
+
+
+
+
+
+
+
+
 
 
 
