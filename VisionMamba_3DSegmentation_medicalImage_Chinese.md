@@ -518,7 +518,41 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 
 
 
+<details>     <!---------------------------------------------------   1.1.2.14 AC-MambaSeg   ---------------------------------------------------------------------->
+   <summary>
+   <b style="font-size: larger;">1.1.2.14 AC-MambaSeg 2024/7/7 </b>         
+   </summary>   
+    
+   The Paper, published in 2024.5.08: [HC-MAMBA: VISION MAMBA WITH HYBRID CONVOLUTIONALTECHNIQUES FOR MEDICAL IMAGE SEGMENTATION](https://arxiv.org/pdf/2405.05007)
 
+   The official repository: None
+   
+贡献：
+
+- 这篇文章把空洞卷积和channel shuffle应用到了一起，算是第一篇把空洞卷积应用到Mamba里面的文章(至少在segmentation里面)
+- 整体架构使用的是U-Net的架构, 下采样为patch merging，有4个stage，每一个stage由两个HC-SSM Block组成。skip connection直接连，Decoder和Encoder一样
+  - Encoder部分：有4个stage，每一个stage由HC-SSM Block组成，具体组成在Fig.2b,也就是HC-SSM Block
+  - Decoder部分: 有4个stage，与Encoder对称
+- HC-SSM Block：如图Fig.2b
+   - 开头的X的channel会被分成两份X1,X2
+      - X1进行他们这边提出的卷积模块，其实也就是dilation convolution空洞卷积，HC-Conv block，先一个空洞卷积，然后跟着一个Depthwise Separable Conv
+      - X2进行SSM，用的是VMamba里面的四方向的扫描
+   - 把X1和X2拼接到一起了之后，进行channel shuffle，参考[CSDN Blog](https://blog.csdn.net/weixin_43334693/article/details/130905826?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522172033138416800184137617%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=172033138416800184137617&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-130905826-null-null.142^v100^pc_search_result_base4&utm_term=channel%20shuffle%20operation%2C&spm=1018.2226.3001.4187), 我的理解是，cat之后是[HC-Conv Branch; SSM-Branch], 然后把他变成了HC-Conv-Branch第一个channel，然后是SSM-Branch的第一个Channel，然后是Hc-Conv-Branch第二个channel，然后是SSM-Branch的第二个channel，让channle混合在一起了
+  - 最后有一个残差
+
+
+使用的数据集：
+
+    - ISIC-2017
+    - ISIC-2018
+    - Synapse
+
+
+<img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/HC-Mamba.png" alt="Model" style="width: 500px; height: auto;"/>
+
+   <br />
+
+</details>
 
 
 
