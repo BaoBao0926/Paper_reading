@@ -498,7 +498,8 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 
 使用的数据集：
 
-    - 3D CBCT dataset
+    - ISIC-2018
+    - PH2
 
 <img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/AC-MambaSeg1.png" alt="Model" style="width: 1100px; height: auto;"/>
 
