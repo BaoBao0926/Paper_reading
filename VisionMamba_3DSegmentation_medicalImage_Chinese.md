@@ -621,3 +621,64 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 
 
 
+<details>     <!---------------------------------------------------   1.1.2.18 MHS-VM   ---------------------------------------------------------------------->
+   <summary>
+   <b style="font-size: larger;">1.1.2.18 MHS-VM 2024/7/7 </b>         
+   </summary>   
+    
+   The Paper, published in 2024.6.10: [MHS-VM: Multi-Head Scanning in Parallel Subspaces for Vision Mamba](https://arxiv.org/pdf/2406.00492)
+
+   The official repository: [here](https://github.com/PixDeep/MHS-VM)
+   
+贡献：
+
+- 这篇文章对于Mamba里面的scan pattern和scan route进行了探究，并提出了一个fusion的策略，感觉可以作为一个即插即用的模块
+- 整体架构使用的是VMamba的框架，只是把VMamba的SS2D换成了这篇文章的Multi-Head Scan modules MHS module
+- 这里开始写MHS module，有一些地方写的不是很清楚，但是我又没有看代码，所以有些地方只能比较猜测的去写
+   - 从Fig.1的最下面开始看，Head部分，首先x被映射到不同的分路里面，也是为什么这篇文章会叫自己parallel subspaces的原因，一方面他们是并行的，一方面映射到不同的分路之后，相当于不同的子空间进行计算，类似于Transofrmer，维度是要变小的，如果原来的x的Channel为C，那么对于n个子空间映射之后变成了C/n维度
+   - 然后经过一个Scan Head,这里写的不太清楚，
+      - 我们可以知道一共有4种scan pattern如Fig.2，有4种Scan routes如Fig.4，
+      - 在现在结构中，一个subspace(一条分路)只使用一个scan pattern， in our current architecture, one scan pattern is deployed per subspace
+      - 文中提到每一个scan head默认使用四个routes，然后把四个routes stack到一起，但是这个Stack根据我得猜测和Fig.2(我没有放进来),我认为不是把这四个按照前后拼到一起，应该是相当于多了一个维度那么拼到一起的
+      - 文中提到每一个Mamba block不共享参数，我认为是每一个子空间的mamba都是独立出来的，但是对于一个子空间，用的应该是一个，不然参数不会这么小(猜的)
+      - 但是让我最不清楚的地方在于，这里有四种pattern，但是默认是只有三个scan head，那应该怎么分配？我没有看到任何描述
+   - 对于一个pattern出来的四个routes的结果，丢到ESF(Embedding Section Fusion)里面去，进行一个fusion，这个文章提供了四种fusion的方式，进行了比较，但是第四种方式直接在讲述的时候就被pass掉了
+      - 第一种方式Direct Addition，把所有的直接加在一起
+      - 第二种方式Mixture of Pooling，如Fig.5a所示，是CBAM的操作，Linear([AvgPool(x);MaxPool(x)])
+      - 第三种方式CV-GUIDED Scaling, CV是Coefficient of Variation,具体公式如下图所示: <img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/MHS-VM2.png" alt="Model" style="width: 800px; height: auto;"/>
+         - 变异系数是对样本或总体中平均值周围数据的相对可变性或分散性的度量(Coefficient of variation is a measure of relative variability or dispersion of data around the mean value in a sample or population)
+         - 如果数据分散，那么CV就会大，在一定程度上，由这些扫描路径提取的嵌入很好地知道位置信息，并且值得保留或增强(To a certain extent,the embedding extracted by these scan routes is well aware of positional information and is worth preserved or enhancing)
+         - 并且，从公式(9)中可以看到，这篇文章对于x(没有说清楚x究竟是谁)，目的是在图中写了，用一个参数t来filter out feature with lower CV value(这说明希望要一个高CV的结果)，后面也论述到这可以作为一种新的regularization的方法阻止overfitting和generalization
+      - 第四种方式，可以把第二种方式和第三种方式结合起来， z4 = z2 (*) monotone(ycv)
+         - z4，z2代表第几种方式的结果，z2就是第二种方式的结果，z4就是第四方式的结果
+         - (*)代表的是element-wise product，github不知道怎么打出对应的符号
+         - montone代表的是activation function，such as Sigmoid and ReLU
+         - ycv可以从上图的公式8的下面第一行看到 ycv的公式，ycv= std([yi[)/avg([yi-min([yi])])
+         - 但是文章讨论说，在ISIC18上的舒颜表明，这个没有significant performance improvement，并且会增加计算复杂度，所以就被pass了
+- 消融实验的结果
+   - ESF fusion的结果是，CV-guided Scaling > Mixture of Pooling > Directly Sum
+   - Fig.1里面的最后tail里面的projection，结果是有Projection会更好，毕竟更深了
+   - Number of scan head: 4个子空间(子空间维度C/3) > 4个子空间(子空间维度C/4) > 3个子空间(子空间C/3)， 所以子空间变多，维度变多是有一定作用的，但是后两个的参数量差不多都是在17M，第一个的参数量是20M，变化了很多
+   - 最后是于VM-UNet和VM-UNet-T进行了结果比较，因为这篇文章相当于提出了一个plug-and-play的模块，所以只把VM-UNet里面的SS2D给替换了，性能大概可以表述为比VM-UNet-T差不多，比VM-UNet基本一致，其中VM-UNet-T是使用了VM-UNet的权重作为预训练权重然后继续训练的结果
+
+     
+使用的数据集：
+
+    - ISIC17
+    - ISIC18
+    - Synapse
+
+
+<img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/MHS-VM.png" alt="Model" style="width: 1000px; height: auto;"/>
+
+   <br />
+
+</details>
+
+
+
+
+
+
+
+
