@@ -591,6 +591,33 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 
 
 
+<details>     <!---------------------------------------------------   1.1.2.17 SAM-VMNet   ---------------------------------------------------------------------->
+   <summary>
+   <b style="font-size: larger;">1.1.2.17 SAM-VMNet 2024/7/7 </b>         
+   </summary>   
+    
+   The Paper, published in 2024.5.08: [SAM-VMNet:Deep Neural Networks For Coronary Angiography Vessel Segmentation](https://arxiv.org/pdf/2406.00492)
+
+   The official repository: None
+   
+贡献：
+
+- 这篇文章不是很创新，不过我也不知道究竟怎么样，但是把SAM(Segment Anything in Medical Images)这篇工作的内容拿过来了和Mamba一起进行了合作，算是第一篇Mamba和SAM的融合，但是我感觉融合的不是很好。
+- 我没有看过关于SAM的内容，所以我也不太清楚里面的工作是什么，简单来看，有提示工程(有点像是clip了),然后医学图像的数据集很大，好像有100w
+- 整体架构使用的是U-Net的架构
+   - 关于MedSAM的部分，是这样的，通过一个训练好了的VM-UNet进行一次粗预测，得到的预测结果和原图一起扔到MedSAM的encoder里面进行的东西，这一部分的训练参数全部冻结
+   - 上面得到的东西和Encoder cat到一起，然后进行decoder的预测
+
+使用的数据集：
+
+    - ARCADE dataset
+
+
+<img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/SAM-VMNet.png" alt="Model" style="width: 1000px; height: auto;"/>
+
+   <br />
+
+</details>
 
 
 
