@@ -433,7 +433,41 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 
 
 
+<details>     <!---------------------------------------------------   1.1.2.13 T-Mamba   ---------------------------------------------------------------------->
+   <summary>
+   <b style="font-size: larger;">1.1.2.13 T-Mamba 2024/7/7 </b>         
+   </summary>   
+    
+   The Paper, published in 2024.4.01: [T-Mamba:Frequency-Enhanced Gated Long-Range Dependency for Tooth 3D CBCT Segmentation ](https://arxiv.org/pdf/2404.01065)
 
+   The official repository: [Here](https://github.com/wurenkai/UltraLight-VM-UNet)
+   
+贡献：
+
+- 这篇文章做的最大贡献是,把Frequency-domian引入计算，把每一个stage换成了类似于DenseNet的结构，最后在Mamba block里面加入了一个Gate Selection Unit,并且坚决加入位置编码，小创新点还是很多的，用于牙齿检测，所以叫做Tooth-Mamba
+- 整体架构使用的是U-Net的架构(没有非常像), 没有说下采样是什么，只有三个stage，每一个stage都有5个unit的denseNet组成，然后跟着一个下采样，decoder好像只有一个predict head也没有别的了
+  - Encoder部分：三个stage，每一个stage都有5个unit的denseNet组成，然后跟着一个下采样，由Tim Block组成
+  - Decoder部分: 只有把三个stage的输出cat到一起，然后直接就是预测头了，估计也就是一个卷积处理了一下，所以和U-Net的那种构架有一些区别
+- Tim的构成：
+   - 首先，在进行token embeding的后面，这篇文章非常坚决的加入了位置编码，使用的是Transformer里面的那个sin cos位置编码方式，使用共享参数，在每一个Tim block里面都加上。这篇文章认为这样的位置编码可以保持spatial position保持不变， 同时减少模型的参数和计算负担，通过消融实验里面的数据，这个dual positional encoding的方式比signgle positional embedding的方式好
+   - Frequency-based band pass filtering：大体就是引入F-Domian，
+      - 在文中介绍到，高频率的成文会不中texture details，低频率的成分会encode shape informaton，这样，把frequency domain feature和spatial domain一起，可以宝成一个更准确的
+      - 从图上看，也就是在Mambba的方向上，多引入了一个方向的分路，从公式(5)看起来，并没有用到ssm，只是很单纯的一个计算Bandpass的计算，有点没看懂这个bandpass是个什么东西
+   - Gate selection Unit：在forward, backward和f-domian的输出后面通过这个gate selection unit去进行fusion的操作，主要操作在公式6和Fig.1c里面展示
+      - 有一个小点，通过这篇[CSDN Blog](https://blog.csdn.net/weixin_43301333/article/details/114394629?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522172032419116777224487805%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&request_id=172032419116777224487805&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_ecpm_v1~rank_v31_ecpm-2-114394629-null-null.142^v100^pc_search_result_base4&utm_term=FC%E6%98%AF%E6%8C%87%E4%BB%80%E4%B9%88%EF%BC%8C%E5%9C%A8%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%B8%AD&spm=1018.2226.3001.4187),从Fig.1c，可以发现，Embedding Sequence->Adaptiva Pooling->MLP->FC,已经有了MLP干嘛还来一个FC呢？从blog看到，MLP一般指多层线性层 有hidden layer的，FC指fully connected layer，可以是单层可以是多层，所以我觉得可能是吧最后一层单独拿出来以作说明。
+
+
+使用的数据集：
+
+    - 3D CBCT dataset
+
+
+<img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/T-Mamba.png" alt="Model" style="width: 1100px; height: auto;"/>
+
+
+   <br />
+
+</details>
 
 
 
