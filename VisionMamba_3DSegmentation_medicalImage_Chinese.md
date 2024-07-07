@@ -558,6 +558,38 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
 
 
 
+<details>     <!---------------------------------------------------   1.1.2.16 UU-Mamba   ---------------------------------------------------------------------->
+   <summary>
+   <b style="font-size: larger;">1.1.2.16 UU-Mamba 2024/7/7 </b>         
+   </summary>   
+    
+   The Paper, published in 2024.5.08: [UU-Mamba:Uncertainty-aware U-Mamba for Cardiac Image Segmentation](https://arxiv.org/pdf/2405.17496)
+
+   The official repository: None
+   
+贡献：
+
+- 这篇文章不是很有看头，用的是U-Mamba的结构，VMamba的SS2D的ssm模块，Mamba block略微改了一点，主要点在于，它提出了使用Uncertianty-aware Loss进行训练，使用SAM optimization进行优化，
+- 整体架构使用的是U-Net的架构, 与UMamba保持一致，下采样为Conv，有4个stage，每一个stage由。skip connection直接连，Decoder和Encoder一样，看看图就知道了
+- Uncertainty-Aware Loss: 文章提出，传统的Cross-Entropy loss可能不能处理好class imbalance or the fine details，它这种Uncertainty-Aware Loss可以做到engance resilience and precision by focusing on confident predictions and reducing the influence of ambiguous ones
+   - Dice Coefficient (DC)loss: 这种基于区域的度量强调了预测和地面真值区域之间的重叠，保持了分割区域的形状和边界的准确性This region-based metric em phasizes the overlap between predicted and ground truth areas,preserving the accuracy of the shape and boundaries of segmented regions.
+   - Cross-Entropy (CE)loss: 这种基于分布的损失确保了对单个像素的准确分类，从而提高了分类精度。This distribution-based loss ensures accurate categorization of individual pixels,im proving classification precision.
+   - Focal loss: 这种像素级损失通过对难以分类的情况赋予更大的重要性来解决类不平衡问题，增强了模型处理复杂场景的能力 This pixel-level loss addresses class imbalance by assigning greater importance to difficult-to-classify in stances,enhancing the model’s capability to handle com plex scenarios
+- 文章用了Sharpness-Aware Minimization (SAM) optimization优化器进行训练，我没有细看这一部分，但是我觉得既然大部分的文章是用Adam或者AdamW的，一定是由道理的
+
+
+使用的数据集：
+
+    - ACDC dataset, Automated Cardiac Diagnosis Challenge
+
+
+<img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/1.Mamba/1.1%20VisionMamba/1.1.2%20Segmentation%20in%20medical%20image/HC-Mamba.png" alt="Model" style="width: 1000px; height: auto;"/>
+
+   <br />
+
+</details>
+
+
 
 
 
