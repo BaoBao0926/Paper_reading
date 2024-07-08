@@ -412,7 +412,7 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
      - CAB(x) = x + x * Sigmoid(FC(GAP(x)))
   - Decoder部分: 与Encoder对称，由3层卷积和3层PVM Layer
 - PVM Layer构成
-   - 最核心想法如Fig.3所示，我们把channel划分成四份，对着每一份进行一个mamba的操作，这样可以节约非常多的参数，最后在拼到一起
+   - 最核心想法如Fig.3所示，我们把channel划分成四份，对着每一份进行一个mamba的操作(从代码上看，都是同一个mamba)，这样可以节约非常多的参数，最后在拼到一起
    - 有一个Fig.4，我没有放到这里来，如果对着C channel数量的直接进行mamba，需要x个parameter，那么对着C/2进行两次mamba，只需要2*0.251(两个C/2是分开的mamba)，对着4 * C/4只需要0.063 * 4个参数。
    - 整体看起来非常简单，并且参数非常少，而且效果还不错，虽然不都是最好的，ISIC2017 DSC SE是最好的，PH^2全都是最好的，ISIC2018在DSC和ACC上是最好的
   
