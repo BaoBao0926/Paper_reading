@@ -415,6 +415,13 @@ Here, I will put some paper about Vision Mamba used in medical image segmentatio
    - 最核心想法如Fig.3所示，我们把channel划分成四份，对着每一份进行一个mamba的操作(从代码上看，都是同一个mamba)，这样可以节约非常多的参数，最后在拼到一起
    - 有一个Fig.4，我没有放到这里来，如果对着C channel数量的直接进行mamba，需要x个parameter，那么对着C/2进行两次mamba，只需要2*0.251(两个C/2是分开的mamba)，对着4 * C/4只需要0.063 * 4个参数。
    - 整体看起来非常简单，并且参数非常少，而且效果还不错，虽然不都是最好的，ISIC2017 DSC SE是最好的，PH^2全都是最好的，ISIC2018在DSC和ACC上是最好的
+- 从代码中看到的实现细节
+   - 首先关于CAB的实现，我们可以看到Fig.2里面的CAB其实有一个other stage，我以前没有看过对应的那篇文章。其实这里是6个stage的output要一起cat在一起，然后分别通过对应的linear层映射到各自的维度，所以这里其实是要把每一个stage的信息综合
+   - 关于skip connection，从Fig.2上来看，每一个stage都要经过SAB CAB，但是事实上并不是，从代码来看stage 6并没有经过SAB CAB，甚至都没有skip connection，其实有点把stage当作bottleneck的感觉，这个绝对不是代码失误，因为上面提到CAB是吧所有stage合并在一起，但是代码其实只把前5个stage合并到一起了
+   - PVM Layer中，四个分割开的channel group通过的其实是一个mamba block
+   - 下采样用的是stride=2，size=2的maxpooling
+   - encoder的卷积全部都是size=3,stride=1,padding=1的
+   - decoder的最后一个卷积其实相当于segmentation head，输出num_class， size=1。 其他两个decoder size=3, stride=1, padding=1
   
 使用的数据集：
 
