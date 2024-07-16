@@ -24,7 +24,7 @@ Here, I will put some paper about **Continual Learning**, focusing on Function-R
   - (f) 就是这篇工作，简单来说，是第一篇使用knowledge distinction的方法在Continual Learning身上 
 
 
-<img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/2.Continual_Learning/Regularization-Based_Approach/Funtion/LwF1.png" alt="Model" style="width: 600px; height: auto;"/>
+<img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/2.Continual_Learning/Regularization-Based_Approach/Funtion/LwF1.png" alt="Model" style="width: 1200px; height: auto;"/>
     
 </details>
 
