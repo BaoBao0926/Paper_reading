@@ -66,3 +66,22 @@ The main page of this repository: [here](https://github.com/BaoBao0926/Paper_rea
 
 
 
+  <details> 
+   <summary>
+   <b style="font-size: larger;">2.1.2.2 iCaRL </b>     <!----------  2.1.2.2 iCaRL  ------------ -->
+   </summary>   
+    
+   The Paper, published in 2017: [iCaRL:Incremental Classifier and Representation Learning ](https://openaccess.thecvf.com/content_cvpr_2017/papers/Rebuffi_iCaRL_Incremental_Classifier_CVPR_2017_paper.pdf)
+
+
+
+<img src="https://github.com/BaoBao0926/Paper_reading/blob/main/Image/2.Continual_Learning/Regularization-Based_Approach/Funtion/LwF3.png" alt="Model" style="width: 1000px; height: auto;"/>
+  
+</details>
+
+
+
+
+
+
+
