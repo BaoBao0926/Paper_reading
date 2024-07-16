@@ -15,7 +15,7 @@ I am going to write somethings about the papers I read in this repository. I may
         - 2.1.1 Weight Regularization 
         - 2.1.2 Function Regularization [English]() | [简体中文](https://github.com/BaoBao0926/Paper_reading/blob/main/CL_Function_regula_chinese.md)
     - 2.2 Replay-Based Approach
-        - 2.2.1 Experience Replay
+        - 2.2.1 Experience Replay [English]() | [简体中文]()
         - 2.2.2 Generative Replay
     - 2.3 Optimization-Based Approach
         - 2.3.1 Gradient Projection
